@@ -21,6 +21,36 @@ def resize_to_determined_size(img, max_size=1024):
 
     return img
 
+### from https://github.com/clovaai/CRAFT-pytorch/blob/master/imgproc.py ###
+def normalizeMeanVariance(in_img, mean=(0.485, 0.456, 0.406), variance=(0.229, 0.224, 0.225)):
+    '''
+    in_img:
+        numpy array of [h,w,c]
+    # should be RGB order    
+    # RGB values vary from 0-255
+    '''
+    img = in_img.copy().astype(np.float32)
+
+    img -= np.array([mean[0] * 255.0, mean[1] * 255.0, mean[2] * 255.0], dtype=np.float32)
+    img /= np.array([variance[0] * 255.0, variance[1] * 255.0, variance[2] * 255.0], dtype=np.float32)
+    return img
+
+def denormalizeMeanVariance(in_img, mean=(0.485, 0.456, 0.406), variance=(0.229, 0.224, 0.225)):
+    '''
+    in_img:
+        numpy array of [h,w,c]
+    # should be RGB order    
+    # RGB values are already normalized
+    '''
+    img = in_img.copy()
+    img *= variance
+    img += mean
+    img *= 255.0
+    img = np.clip(img, 0, 255).astype(np.uint8)
+    return img
+
+
+### basic data augmentation ###
 ### from https://github.com/xkumiyu/numpy-data-augmentation ###
 def horizontal_flip(image1, rate=0.5):
     if np.random.rand() < rate:
