@@ -35,4 +35,8 @@ def clip_gradient(optimizer, grad_clip):
             if param.grad is not None:
                 param.grad.data.clamp_(-grad_clip, grad_clip)
                 
+def save_model_info(model, save_dir, save_name='/model_dict.txt'):
+    model_info = str(model._modules)
+    with open(save_dir + save_name, mode='w') as f:
+        f.write(model_info)
 
